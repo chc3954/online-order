@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 
 const TABS: { [key: string]: string } = { home: "/", menu: "/menu", contact: "/contact" };
 
-export default function ClientMenu() {
+export default function Nav() {
   const pathname = usePathname();
   const [selectedMenu, setSelectedMenu] = useState<string>("");
 
