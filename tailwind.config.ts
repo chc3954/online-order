@@ -1,16 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
     extend: {
       colors: {
-        background: "#202020",
-        foreground: "#FFFFFF",
+        black: "#202020",
+        white: "#FFFFFF",
         highlight: "#E7A644",
-        btn: {
-          background: "#E7A644",
-          "background-hover": "#F0AF0F",
-        },
+        highlightdark: "#DA9A2A",
       },
     },
   },

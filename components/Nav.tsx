@@ -4,14 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
-const TABS: { [key: string]: string } = { home: "/", menu: "/menu", contact: "/contact" };
+const TABS: { [key: string]: string } = {
+  home: "/",
+  menu: "/menu",
+  contact: "/contact",
+};
 
 export default function Nav() {
   const pathname = usePathname();
   const [selectedMenu, setSelectedMenu] = useState<string>("");
 
   useEffect(() => {
-    const currentTab = Object.keys(TABS).find((key) => TABS[key] === pathname) || "home";
+    const currentTab =
+      Object.keys(TABS).find((key) => TABS[key] === pathname) || "home";
     setSelectedMenu(currentTab);
   }, [pathname]);
 
@@ -20,7 +25,7 @@ export default function Nav() {
   };
 
   return (
-    <ul className="justify-self-center list-none font-bold uppercase">
+    <ul className="col-span-3 justify-self-center list-none font-bold uppercase">
       {Object.keys(TABS).map((key) => (
         <li key={key} className="group inline-block mx-3 cursor-pointer">
           <input
@@ -32,14 +37,15 @@ export default function Nav() {
             onChange={handleChange}
             className="hidden"
           />
-          <label htmlFor={key} className={selectedMenu === key ? "text-highlight" : ""}>
+          <label
+            htmlFor={key}
+            className={selectedMenu === key ? "text-highlight" : ""}>
             <Link href={TABS[key]}>{key}</Link>
           </label>
           <span
             className={`block m-auto max-w-0 group-hover:max-w-full transition-all duration-100 ease-in-out h-0.5 ${
-              selectedMenu === key ? "bg-highlight" : "bg-foreground"
-            }`}
-          ></span>
+              selectedMenu === key ? "bg-highlight" : "bg-white"
+            }`}></span>
         </li>
       ))}
     </ul>

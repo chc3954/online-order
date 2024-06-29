@@ -1,10 +1,12 @@
-import Link from "next/link";
-import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
+import Link from "next/link";
+import { GoogleSignInButton } from "./googleSignInButton";
+import { headers } from "next/headers";
 
 export default function Login({ searchParams }: { searchParams: { message: string } }) {
+  const origin = process.env.VERCEL_URL ?? "http://localhost:3000";
+
   const signIn = async (formData: FormData) => {
     "use server";
 
@@ -12,83 +14,94 @@ export default function Login({ searchParams }: { searchParams: { message: strin
     const password = formData.get("password") as string;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password
     });
 
     if (error) {
       return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/");
+    if (data) {
+      return redirect("/");
+    }
   };
 
-  const signUp = async (formData: FormData) => {
+  const signInWithGoogle = async () => {
     "use server";
+    console.log(origin);
 
-    const origin = headers().get("origin");
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
     const supabase = createClient();
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
+        redirectTo: `${origin}/auth/callback`,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent"
+        }
+      }
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return console.error("Error signing in with Google:", error.message);
     }
 
-    return redirect("/login?message=Check email to continue sign in process");
+    if (data?.url) {
+      return redirect(data.url); // use the redirect API for your server framework
+    }
   };
 
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-      <form className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-        <label className="text-md" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
-        <label className="text-md" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          type="password"
-          name="password"
-          placeholder="••••••••"
-          required
-        />
-        <SubmitButton
-          formAction={signIn}
-          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing In..."
-        >
-          Sign In
-        </SubmitButton>
-        <SubmitButton
-          formAction={signUp}
-          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing Up..."
-        >
-          Sign Up
-        </SubmitButton>
+    <div className="flex justify-center bg-white">
+      <div className="p-10 m-10 text-left border border-gray-300 rounded-lg bg-white shadow-xl">
+        <h3 className="text-2xl font-bold text-center">Welcome Back!</h3>
+        <form className="mt-8">
+          <div>
+            <label className="block" htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              name="email"
+              required
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block" htmlFor="password">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              name="password"
+              required
+            />
+          </div>
+          <div className="mt-4  justify-between">
+            <button
+              type="submit"
+              className="w-full px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
+              formAction={signIn}>
+              Sign In
+            </button>
+            <GoogleSignInButton signInWithGoogle={signInWithGoogle} />
+            <div className="w-full px-6 py-2 mt-4">
+              New customer?{" "}
+              <Link href="/signup" className="underline hover:font-semibold">
+                Sign Up
+              </Link>
+            </div>
+          </div>
+        </form>
         {searchParams?.message && (
-          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-            {searchParams.message}
-          </p>
+          <p className="mt-4 text-sm text-center text-red-600">{searchParams.message}</p>
         )}
-      </form>
+      </div>
     </div>
   );
 }

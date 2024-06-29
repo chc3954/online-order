@@ -6,7 +6,7 @@ export default async function LoginBtn() {
   const supabase = createClient();
 
   const {
-    data: { user },
+    data: { user }
   } = await supabase.auth.getUser();
 
   const signOut = async () => {
@@ -18,7 +18,7 @@ export default async function LoginBtn() {
   };
 
   const btnStyle =
-    "py-2 px-3 rounded-xl no-underline bg-btn-background hover:bg-btn-background-hover font-semibold uppercase";
+    "py-2 px-3 rounded-xl no-underline bg-highlight hover:bg-highlightdark font-semibold uppercase";
 
   return user ? (
     <div className="justify-self-end">

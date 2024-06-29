@@ -14,12 +14,16 @@ export const metadata = {
   description: "The best Korean-style chicken restaurant",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="relative w-full min-h-screen">
         <Header />
-        <main className="p-5">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
