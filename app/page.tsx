@@ -1,5 +1,11 @@
+import Carousel from "../components/Carousel";
 import React from "react";
 
 export default function Index() {
-  return <main className="">This is Home</main>;
+  return (
+    <>
+      <Carousel />
+      <div className="w-full text-center p-5">Some Intro Here</div>
+    </>
+  );
 }

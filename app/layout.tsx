@@ -11,14 +11,10 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "HC Chicken",
-  description: "The best Korean-style chicken restaurant",
+  description: "The best Korean-style chicken restaurant"
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="relative w-full min-h-screen">

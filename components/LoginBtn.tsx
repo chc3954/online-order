@@ -17,21 +17,20 @@ export default async function LoginBtn() {
     return redirect("/login");
   };
 
-  const btnStyle =
-    "py-2 px-3 rounded-xl no-underline bg-highlight hover:bg-highlightdark font-semibold uppercase";
-
   return user ? (
     <div className="justify-self-end">
       <span className="text-sm">Hey, {user.email}!</span>
       <div className="inline-block ml-4">
         <form action={signOut}>
-          <button className={btnStyle}>Logout</button>
+          <button className="py-2 px-3 rounded-xl no-underline bg-highlight hover:bg-highlightdark font-semibold uppercase">
+            Logout
+          </button>
         </form>
       </div>
     </div>
   ) : (
     <div className="justify-self-end">
-      <button className={btnStyle}>
+      <button className="py-2 px-3 rounded-xl no-underline bg-highlight hover:bg-highlightdark font-semibold uppercase">
         <Link href="/login">Login</Link>
       </button>
     </div>
